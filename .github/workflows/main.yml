@@ -73,7 +73,7 @@ jobs:
           ${{ env.img }} \
           bash -exc '\
             set -xe && \
-            ${{ env.py }} -VV && \
+            ${{ env.py }} -VV
           '
               
               
