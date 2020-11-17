@@ -70,7 +70,7 @@ jobs:
               /opt/python/${{ matrix.PYTHON }}/bin/python -m venv .venv;
               source .venv/bin/activate;
               .venv/bin/python -VV;
-              .venv/bin/python m site;
+              .venv/bin/python -m site;
               .venv/bin/pip install --upgrade pip setuptools wheel tox;
               .venv/bin/tox --version;
               .venv/bin/tox -e py; "
