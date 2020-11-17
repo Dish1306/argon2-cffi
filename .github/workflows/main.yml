@@ -75,7 +75,7 @@ jobs:
         docker run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
           ${{ env.img }} \
           bash -c "set -xe && \
-            yum install -y ${{ env.py }}-dev && \
+            yum install -y python3-dev && \
             ${{ env.py }} -VV && \
             ${{ env.py }} -m pip install --upgrade pip setuptools wheel && \
             ${{ env.py }} -m pip install --upgrade coverage[toml] virtualenv tox tox-gh-actions && \
