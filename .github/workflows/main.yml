@@ -62,6 +62,9 @@ jobs:
       py: /opt/python/${{ matrix.pyver }}/bin/python
       img: quay.io/pypa/manylinux2014_${{ matrix.arch }}
     steps:
+    - uses: "actions/checkout@v2"
+      with:
+          submodules: "recursive"
     - name: Set up QEMU
       id: qemu
       uses: docker/setup-qemu-action@v1
@@ -71,14 +74,12 @@ jobs:
       run: |
         docker run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
           ${{ env.img }} \
-          bash -exc '\
-            set -xe && \
+          bash -c "set -xe && \
             ${{ env.py }} -VV && \
             ${{ env.py }} -m site && \ 
             ${{ env.py }} -m pip install --upgrade pip setuptools wheel && \
             ${{ env.py }} -m pip install --upgrade coverage[toml] virtualenv tox tox-gh-actions && \
-            ${{ env.py }} -m tox
-          '
+            ${{ env.py }} -m tox "
               
               
   system-package:
