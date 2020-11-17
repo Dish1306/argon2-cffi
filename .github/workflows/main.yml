@@ -69,7 +69,7 @@ jobs:
       run: echo ${{ steps.qemu.outputs.platforms }}
     - name: Test
       run: |
-        podman run --rm -v $PWD/dist:/dist:rw --workdir=/ws \
+        docker run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
           ${{ env.img }} \
           bash -exc '\
             set -xe && \
