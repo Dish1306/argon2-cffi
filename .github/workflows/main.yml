@@ -73,7 +73,11 @@ jobs:
           ${{ env.img }} \
           bash -exc '\
             set -xe && \
-            ${{ env.py }} -VV
+            ${{ env.py }} -VV && \
+            ${{ env.py }} -m site && \ 
+            ${{ env.py }} -m pip install --upgrade pip setuptools wheel && \
+            ${{ env.py }} -m pip install --upgrade coverage[toml] virtualenv tox tox-gh-actions && \
+            ${{ env.py }} -m tox
           '
               
               
