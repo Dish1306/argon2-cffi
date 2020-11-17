@@ -58,7 +58,9 @@ jobs:
        matrix:
         PYTHON: [cp36-cp36m, cp37-cp37m, cp38-cp38, cp39-cp39]
     steps:
-      - uses: actions/checkout@v2
+      - uses: "actions/checkout@v2"
+        with:
+          submodules: "recursive"
       - run: |
           docker run --rm --privileged hypriot/qemu-register
       - uses: docker://quay.io/pypa/manylinux2014_aarch64
@@ -73,7 +75,7 @@ jobs:
               .venv/bin/python -m site;
               .venv/bin/pip install --upgrade pip setuptools wheel tox;
               .venv/bin/tox --version;
-              .venv/bin/tox -e py; "
+              .venv/bin/python -m tox; "
               
               
   system-package:
