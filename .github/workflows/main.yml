@@ -52,30 +52,29 @@ jobs:
           fail_ci_if_error: true
   
   tests_aarch64:
-    name: "${{ matrix.PYTHON }} manylinux2014-aarch64"
-    runs-on: ubuntu-latest
     strategy:
-       matrix:
-        PYTHON: [cp36-cp36m, cp37-cp37m, cp38-cp38, cp39-cp39]
+      matrix:
+        pyver: [cp36-cp36m, cp37-cp37m, cp38-cp38, cp39-cp39]
+        arch: [aarch64]
+      fail-fast: false
+    runs-on: ubuntu-latest
+    env:
+      py: /opt/python/${{ matrix.pyver }}/bin/python
+      img: quay.io/pypa/manylinux2014_${{ matrix.arch }}
     steps:
-      - uses: "actions/checkout@v2"
-        with:
-          submodules: "recursive"
-      - run: |
-          docker run --rm --privileged hypriot/qemu-register
-      - uses: docker://quay.io/pypa/manylinux2014_aarch64
-        with:
-          args: |
-              bash -c "set -xe;
-              mkdir -p /github/home/.cache/pip;
-              chown -R $(whoami) /github/home/.cache;
-              /opt/python/${{ matrix.PYTHON }}/bin/python -m venv .venv;
-              source .venv/bin/activate;
-              .venv/bin/python -VV;
-              .venv/bin/python -m site;
-              .venv/bin/pip install --upgrade pip setuptools wheel coverage[toml] virtualenv tox tox-gh-actions;
-              .venv/bin/tox --version;
-              .venv/bin/python -m tox; "
+    - name: Set up QEMU
+      id: qemu
+      uses: docker/setup-qemu-action@v1
+    - name: Available platforms
+      run: echo ${{ steps.qemu.outputs.platforms }}
+    - name: Test
+      run: |
+        podman run --rm -v $PWD/dist:/dist:rw --workdir=/ws \
+          ${{ env.img }} \
+          bash -exc '\
+            set -xe && \
+            ${{ env.py }} -VV && \
+          '
               
               
   system-package:
