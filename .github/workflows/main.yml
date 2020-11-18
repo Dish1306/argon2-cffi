@@ -73,7 +73,7 @@ jobs:
     - name: set -xe
       run: |
         podman run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
-         ${{ env.img }} set -xe
+         ${{ env.img }} bash -exc 'set -xe'
     - name: python version
       run: |
         podman run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
