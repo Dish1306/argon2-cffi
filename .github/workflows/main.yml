@@ -82,15 +82,12 @@ jobs:
       run: |
         podman run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
          ${{ env.img }} ${{ env.py }} -m site
-    - name: install python dependencies
-      run: |
-        podman run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
-         ${{ env.img }} ${{ env.py }} -m pip install --upgrade pip setuptools wheel
     - name: install dependencies
       run: |
         podman run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
          ${{ env.img }} \
          bash -exc '\
+            ${{ env.py }} -m pip install --upgrade pip setuptools wheel && \
             ${{ env.py }} -m pip install --upgrade coverage[toml] virtualenv tox tox-gh-actions && \
             ${{ env.py }} -m tox \
           '
