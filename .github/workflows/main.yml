@@ -50,6 +50,38 @@ jobs:
         if: "contains(env.USING_COVERAGE, matrix.python-version)"
         with:
           fail_ci_if_error: true
+        
+  tests_aarch64:
+    strategy:
+      matrix:
+        pyver: [cp36-cp36m, cp37-cp37m, cp38-cp38, cp39-cp39]
+        arch: [aarch64]
+      fail-fast: false
+    runs-on: ubuntu-latest
+    env:
+      py: /opt/python/${{ matrix.pyver }}/bin/python
+      img: quay.io/pypa/manylinux2014_${{ matrix.arch }}
+    steps:
+    - uses: "actions/checkout@v2"
+      with:
+          submodules: "recursive"
+    - name: Set up QEMU
+      id: qemu
+      uses: docker/setup-qemu-action@v1
+    - name: Available platforms
+      run: echo ${{ steps.qemu.outputs.platforms }}
+    - name: set -xe
+      run: |
+        podman run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
+         ${{ env.img }} set -xe
+    - name: python version
+      run: |
+        podman run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
+         ${{ env.img }} ${{ env.py }} -VV
+    - name: python site
+      run: |
+        podman run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
+         ${{ env.img }} ${{ env.py }} -m site
 
   system-package:
     runs-on: "ubuntu-latest"
