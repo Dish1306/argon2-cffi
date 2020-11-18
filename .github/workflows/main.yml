@@ -54,8 +54,6 @@ jobs:
   tests_aarch64:
     name: "${{ matrix.PYTHON }} manylinux2014-aarch64"
     runs-on: ubuntu-latest
-    env:
-      USING_COVERAGE: "3.5,3.6,3.7,3.8"
     strategy:
        matrix:
         PYTHON: [cp36-cp36m, cp37-cp37m, cp38-cp38, cp39-cp39]
@@ -80,9 +78,8 @@ jobs:
               .venv/bin/python -m tox; 
               .venv/bin/python -m coverage combine;
               .venv/bin/python -m coverage xml; "
-              
-              
-  system-package:
+
+system-package:
     runs-on: "ubuntu-latest"
     name: "Install and test with system package of Argon2."
     steps:
