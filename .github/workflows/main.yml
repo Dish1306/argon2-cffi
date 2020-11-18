@@ -82,7 +82,6 @@ jobs:
             ${{ env.py }} -m pip install --upgrade coverage[toml] virtualenv tox tox-gh-actions && \
             ${{ env.py }} -m tox \
           '
-
   system-package:
     runs-on: "ubuntu-latest"
     name: "Install and test with system package of Argon2."
