@@ -70,23 +70,14 @@ jobs:
       uses: docker/setup-qemu-action@v1
     - name: Available platforms
       run: echo ${{ steps.qemu.outputs.platforms }}
-    - name: set -xe
-      run: |
-        podman run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
-         ${{ env.img }} bash -exc 'set -xe'
-    - name: python version
-      run: |
-        podman run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
-         ${{ env.img }} ${{ env.py }} -VV
-    - name: python site
-      run: |
-        podman run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
-         ${{ env.img }} ${{ env.py }} -m site
-    - name: install dependencies
+    - name: run tox
       run: |
         podman run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
          ${{ env.img }} \
          bash -exc '\
+            set -xe && \
+            ${{ env.py }} -VV && \
+            ${{ env.py }} -m site && \
             ${{ env.py }} -m pip install --upgrade pip setuptools wheel && \
             ${{ env.py }} -m pip install --upgrade coverage[toml] virtualenv tox tox-gh-actions && \
             ${{ env.py }} -m tox \
